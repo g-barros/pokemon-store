@@ -12,29 +12,29 @@ function Cart(props) {
                         <div className="item-desc">
                             <span className="title">{item.name}</span>
                             <p><b>Preço: {item.price}$</b></p>
-                            <button className='waves-effect waves-light btn pink remove' onClick={() => {props.onClick(item.id)}}>Remove</button>
+                            <button className='waves-effect waves-light btn pink remove' onClick={() => {props.onClick(item.id)}}>Remover</button>
                         </div>
                     </li>
                 )
             })
         ) : (<p>Nenhum item no carrinho.</p>);
     
-        return (
-            <div className="container">
-                <div className="cart">
-                    <h5>Pedido:</h5>
-                    <ul className="collection">
-                        {addedItems}
-                    </ul>
-                    <div className='collection'>
-                        <li className='collection-item'><b>Total:{props.total} $</b></li>
-                    </div>
-                    <div className='checkout'>
-                        <button className='waves-effect waves-light btn'>Checkout</button>
-                    </div>
+    return (
+        <div className="container">
+            <div className="cart">
+                <h5>Pedido:</h5>
+                <ul className="collection">
+                    {addedItems}
+                </ul>
+                <div className='collection'>
+                    <li className='collection-item'><b>Total: {props.total} $</b></li>
+                </div>
+                <div className='checkout center'>
+                    <button className='waves-effect waves-light btn'>Finalizar Compra</button>
                 </div>
             </div>
-        )
+        </div>
+    )
 }
 
 export default Cart;

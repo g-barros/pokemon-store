@@ -8,7 +8,7 @@ class Home extends Component {
         super(props);
         this.state = {
             listaPkm: [],
-            tipoPkm: 5,
+            tipoPkm: 18,
             carregado: false,
             erro: null,
             addedPkm: [],
@@ -21,50 +21,36 @@ class Home extends Component {
             .then(resposta => resposta.json())
             .then(
                 (resultado) => {
-                    let pokemon = { id:null, name:null, price:null, img:null};
+                    let pokemon = [{ id:null, name:null, price:null, img:null}];
+                    
                     const infoPokemon = resultado.pokemon.map( pkm => {
                         pokemon.name = pkm.pokemon.name;
                         let pkmAtual = {...pokemon};
                         if(!pkmAtual.img) {
                             this.getInfo(pkm.pokemon.url)
-                                    .then(response => {
+                                    .then((response) => {
                                         pkmAtual.id = response.id;
+                                        pkmAtual.name = response.name;
                                         pkmAtual.price = response.price;
                                         pkmAtual.img = response.img;
+                                    },
+                                    (error) => {
+                                        this.setState({
+                                            ...this.state,
+                                            erro: error,
+                                            carregado: false,
+                                        })
                                     });
                         }
                         return pkmAtual;
                     });
                     this.setState({
+                        ...this.state,
                         listaPkm: infoPokemon,
                         carregado: true,
                     });
                 }
             );
-    //     const resposta = await fetch("https://pokeapi.co/api/v2/type/" + this.state.tipoPkm);
-    //     const body = await resposta.json();
-    //     let pokemon = { id:null, name:null, price:null, img:null}
-    //     const spritedPkm = body.pokemon.map( pkm => {
-    //         pokemon.name = pkm.pokemon.name;
-    //         let currentPkm = {...pokemon};
-    //         if (!pokemon.img){
-    //             this.getInfo(pkm.pokemon.url).then(response => {
-    //                 currentPkm.id = response.id;
-    //                 currentPkm.price = response.price;
-    //                 currentPkm.img = response.img;
-    //             });
-    //             // this.getId(pkm.pokemon.url).then(response => {
-    //             //     currentPkm.id = response;
-    //             // });
-    //             // this.getPrice(pkm.pokemon.url).then(response => {
-    //             //     currentPkm.price = response;
-    //             // });
-    //         }
-    //         return currentPkm;
-    //     })
-    //     this.setState({
-    //         listaPkm: spritedPkm,
-    //     })
     };
 
     async getInfo(url) {
@@ -72,21 +58,12 @@ class Home extends Component {
         const body = await resposta.json();
         const info = {
             id: body.id,
+            name: body.name,
             price:body.base_experience,
             img: body.sprites.front_default,
         }
         return info;
     };
-    // async getId(url) {
-    //     const resposta = await fetch(url);
-    //     const body = await resposta.json();
-    //     return ;
-    // };
-    // async getPrice(url) {
-    //     const resposta = await fetch(url);
-    //     const body = await resposta.json();
-    //     return body.base_experience;
-    // };
 
     handleAdd(id) {
         const listaPkm = this.state.listaPkm;
@@ -97,7 +74,7 @@ class Home extends Component {
             addedPkm: [...this.state.addedPkm, clickedPkm],
             total: novoTotal,
         });
-    }
+    };
 
     handleRemove(id) {
         let pkmARemover = this.state.addedPkm.find(pkm => pkm.id === id);
@@ -110,15 +87,15 @@ class Home extends Component {
             addedPkm: novosPkm,
             total: novoTotal,
         });
-    }
+    };
 
     render() {
         return (
             <>
                 <Navbar />
                 <div className="loja">
-                    {/* {(this.state.carregado) ? (
-                        <> */}
+                    {(this.state.carregado) ? (
+                        <>
                         <Catalog 
                         items={this.state.listaPkm}
                         onClick={(i) => this.handleAdd(i)}
@@ -128,10 +105,9 @@ class Home extends Component {
                             total={this.state.total}
                             onClick={(i) => this.handleRemove(i)}
                         />
-                    {/* </>
-                    ) : (<></>)
-                    } */}
-                    
+                    </>
+                    ) : (<div className="container">Carregando...</div>)
+                    }
                 </div>
             </>
         )
