@@ -1,12 +1,13 @@
 import React from 'react';
+import { Button } from 'react-materialize';
 
-function Navbar() {
+function Navbar(props) {
     return (
         <nav className='nav-wrapper'>
             <div className='container'>
                 <span className='brand-logo'>Pokémon Store</span>
-                <ul className='right hide-on-med-and-down'>
-                    <li>
+                <ul className='right'>
+                    <li className="hide-on-med-and-down">
                         <form>
                             <div className="input-field">
                                 <input id="search" type="search" required/>
@@ -15,8 +16,13 @@ function Navbar() {
                             </div>
                         </form>
                     </li>
-                    <li><a className='material-icons cart-icon'>shopping_cart</a></li>
+                    <li>
+                    <Button className="right" style={{marginTop:"15px"}} waves="light" onClick={()=>props.changeType(props.type)}>
+                        {(props.type === 18 ? ("Dark"):("Fairy"))}
+                    </Button>
+                    </li>
                 </ul>
+                
             </div>
         </nav>
     )
